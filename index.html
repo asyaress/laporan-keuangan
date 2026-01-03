@@ -10,6 +10,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap.min.css">
 
     <style>
         /* --- Layout profesional --- */
@@ -21,6 +25,8 @@
 
         .page-wrap {
             padding: 16px 18px;
+            max-width: 100%;
+            overflow-x: hidden;
         }
 
         .page-head {
@@ -126,6 +132,7 @@
 
         .sum-box {
             min-width: 220px;
+            flex: 1;
         }
 
         .sum-label {
@@ -153,7 +160,8 @@
         }
 
         .stat-box {
-            min-width: 200px;
+            min-width: 180px;
+            flex: 1;
         }
 
         .stat-label {
@@ -169,10 +177,37 @@
             color: #004d40;
         }
 
+        /* --- DataTables Custom --- */
+        .dataTables_wrapper {
+            padding-top: 10px;
+        }
+
+        .dataTables_wrapper .dataTables_filter input {
+            border: 1px solid #dcdcdc;
+            border-radius: 4px;
+            padding: 6px 12px;
+        }
+
+        .dataTables_wrapper .dataTables_length select {
+            border: 1px solid #dcdcdc;
+            border-radius: 4px;
+            padding: 6px 12px;
+        }
+
+        .dt-buttons {
+            margin-bottom: 10px;
+        }
+
+        .dt-buttons .btn {
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
         /* --- Table --- */
         table.table-report {
             margin-top: 6px;
             background: #fff;
+            width: 100% !important;
         }
 
         table.table-report thead th {
@@ -181,6 +216,7 @@
             font-weight: 700;
             color: #333;
             text-align: center;
+            white-space: nowrap;
         }
 
         table.table-report tbody td {
@@ -198,12 +234,13 @@
         }
 
         .col-month {
-            width: 180px;
+            min-width: 120px;
         }
 
         .money {
             text-align: right;
             font-variant-numeric: tabular-nums;
+            white-space: nowrap;
         }
 
         .total-row td {
@@ -252,39 +289,157 @@
             min-width: 84px;
         }
 
-        @media (max-width: 768px) {
-            .page-head {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .filter-label {
-                width: auto;
-                padding-top: 0;
-            }
-
-            .btn-group-actions {
-                margin-left: 0;
-            }
-
-            .chart-container {
-                height: 250px;
-            }
-        }
-
         .year-selector {
             display: inline-flex;
             gap: 8px;
             margin-left: 10px;
+            flex-wrap: wrap;
         }
 
         .year-selector .btn {
             min-width: 60px;
         }
+
+        /* --- Mobile Responsive --- */
+        @media (max-width: 768px) {
+            .page-wrap {
+                padding: 10px;
+            }
+
+            .page-head {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .page-title {
+                font-size: 18px;
+            }
+
+            .filter-label {
+                width: auto;
+                padding-top: 0;
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            .btn-group-actions {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+
+            .btn-group-actions .btn {
+                min-width: auto;
+                margin-bottom: 5px;
+            }
+
+            .chart-container {
+                height: 250px;
+                padding: 10px;
+            }
+
+            .sum-box,
+            .stat-box {
+                min-width: 100%;
+                flex: 1 1 100%;
+            }
+
+            .summary-strip,
+            .stats-strip {
+                gap: 10px;
+            }
+
+            .year-selector {
+                margin-left: 0;
+                margin-top: 10px;
+                width: 100%;
+            }
+
+            .form-inline .input-group {
+                margin-bottom: 5px;
+            }
+
+            /* DataTables mobile */
+            .dataTables_wrapper .dataTables_filter,
+            .dataTables_wrapper .dataTables_length {
+                text-align: left;
+                margin-bottom: 10px;
+            }
+
+            .dataTables_wrapper .dt-buttons {
+                text-align: left;
+            }
+
+            table.table-report {
+                font-size: 12px;
+            }
+
+            .sum-value {
+                font-size: 16px;
+            }
+
+            .stat-value {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 16px;
+            }
+
+            .sum-value {
+                font-size: 14px;
+            }
+
+            .stat-value {
+                font-size: 12px;
+            }
+
+            .btn-group-actions .btn {
+                display: block;
+                width: 100%;
+                margin-bottom: 5px;
+            }
+
+            .year-selector .btn {
+                flex: 1;
+            }
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        .loading-spinner {
+            color: #fff;
+            font-size: 18px;
+        }
     </style>
 </head>
 
 <body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <i class="fa fa-spinner fa-spin fa-3x"></i>
+            <p style="margin-top: 10px;">Memuat data...</p>
+        </div>
+    </div>
+
     <div class="page-wrap">
         <!-- Header -->
         <div class="page-head">
@@ -319,12 +474,6 @@
                         <div class="btn-group-actions" style="margin-top: 10px;">
                             <button id="btnFilter" class="btn btn-info">
                                 <i class="fa fa-search"></i> &nbsp;Tampilkan
-                            </button>
-                            <button id="btnExcel" class="btn btn-excel">
-                                <i class="fa fa-file-excel-o"></i> &nbsp;Excel
-                            </button>
-                            <button id="btnPDF" class="btn btn-pdf">
-                                <i class="fa fa-file-pdf-o"></i> &nbsp;PDF
                             </button>
                             <button id="btnToggleChart" class="btn btn-default">
                                 <i class="fa fa-bar-chart"></i> &nbsp;Grafik
@@ -375,9 +524,9 @@
                 <canvas id="myChart"></canvas>
             </div>
 
-            <!-- Table -->
+            <!-- Table with DataTables -->
             <div class="table-responsive">
-                <table class="table table-report table-bordered table-condensed">
+                <table id="reportTable" class="table table-report table-bordered table-condensed">
                     <thead>
                         <tr>
                             <th class="col-no">#</th>
@@ -388,6 +537,14 @@
                         </tr>
                     </thead>
                     <tbody id="tbodyReport"></tbody>
+                    <tfoot>
+                        <tr class="total-row">
+                            <th colspan="2" class="text-right">TOTAL</th>
+                            <th id="footerIn" class="money">0</th>
+                            <th id="footerOut" class="money">0</th>
+                            <th id="footerNet" class="money">0</th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -397,6 +554,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap.min.js"></script>
 
     <script>
         // ==== Dummy Data (Bulanan) ====
@@ -446,6 +616,15 @@
         };
 
         let chartInstance = null;
+        let dataTable = null;
+
+        function showLoading() {
+            $("#loadingOverlay").addClass("show");
+        }
+
+        function hideLoading() {
+            $("#loadingOverlay").removeClass("show");
+        }
 
         function fmtIDR(n) {
             const num = Number(n || 0);
@@ -458,122 +637,144 @@
         }
 
         function render() {
-            const year = parseInt($("#yearInput").val());
+            showLoading();
 
-            if (!dataByYear[year]) {
-                alert("Data untuk tahun " + year + " tidak tersedia.");
-                return;
-            }
+            setTimeout(() => {
+                const year = parseInt($("#yearInput").val());
 
-            const rows = dataByYear[year];
-            let totalIn = 0, totalOut = 0;
-            let html = "";
-
-            let maxInMonth = { month: "", value: 0 };
-            let minOutMonth = { month: "", value: Infinity };
-
-            rows.forEach((r, i) => {
-                const inVal = Number(r.in || 0);
-                const outVal = Number(r.out || 0);
-                const netVal = inVal - outVal;
-                const netClass = netVal < 0 ? "net-negative" : "net-positive";
-
-                totalIn += inVal;
-                totalOut += outVal;
-
-                // Track max/min
-                if (inVal > maxInMonth.value) {
-                    maxInMonth = { month: r.month, value: inVal };
-                }
-                if (outVal < minOutMonth.value && outVal > 0) {
-                    minOutMonth = { month: r.month, value: outVal };
+                if (!dataByYear[year]) {
+                    hideLoading();
+                    alert("Data untuk tahun " + year + " tidak tersedia.");
+                    return;
                 }
 
-                // Highlight rows
-                let rowClass = "";
-                if (inVal === maxInMonth.value && inVal > 0) rowClass = "highlight-max";
-                if (outVal === minOutMonth.value && outVal > 0) rowClass = "highlight-min";
+                const rows = dataByYear[year];
+                let totalIn = 0, totalOut = 0;
+                let html = "";
 
-                html += `
-          <tr class="${rowClass}">
-            <td class="col-no">${i + 1}</td>
-            <td class="col-month">${r.month}</td>
-            <td class="money">${fmtIDR(inVal)}</td>
-            <td class="money">${fmtIDR(outVal)}</td>
-            <td class="money ${netClass}">${fmtIDR(netVal)}</td>
-          </tr>
-        `;
-            });
+                let maxInMonth = { month: "", value: 0 };
+                let minOutMonth = { month: "", value: Infinity };
 
-            const net = totalIn - totalOut;
-            const netClass = net < 0 ? "net-negative" : "net-positive";
+                rows.forEach((r, i) => {
+                    const inVal = Number(r.in || 0);
+                    const outVal = Number(r.out || 0);
+                    const netVal = inVal - outVal;
+                    const netClass = netVal < 0 ? "net-negative" : "net-positive";
 
-            // TOTAL row
-            html += `
-        <tr class="total-row">
-          <td colspan="2" class="text-right">TOTAL</td>
-          <td class="money">${fmtIDR(totalIn)}</td>
-          <td class="money">${fmtIDR(totalOut)}</td>
-          <td class="money ${netClass}">${fmtIDR(net)}</td>
-        </tr>
-      `;
+                    totalIn += inVal;
+                    totalOut += outVal;
 
-            $("#tbodyReport").html(html);
+                    // Track max/min
+                    if (inVal > maxInMonth.value) {
+                        maxInMonth = { month: r.month, value: inVal };
+                    }
+                    if (outVal < minOutMonth.value && outVal > 0) {
+                        minOutMonth = { month: r.month, value: outVal };
+                    }
 
-            // Update summary
-            $("#sumIn").text(fmtIDR(totalIn));
-            $("#sumOut").text(fmtIDR(totalOut));
-            $("#sumNet").html(`<span class="${netClass}">${fmtIDR(net)}</span>`);
+                    // Highlight rows
+                    let rowClass = "";
+                    if (inVal === maxInMonth.value && inVal > 0) rowClass = "highlight-max";
+                    if (outVal === minOutMonth.value && outVal > 0) rowClass = "highlight-min";
 
-            // Update stats
-            const avgIn = totalIn / 12;
-            const avgOut = totalOut / 12;
-            $("#avgIn").text(fmtIDR(avgIn));
-            $("#avgOut").text(fmtIDR(avgOut));
-            $("#maxMonth").text(maxInMonth.month + " (" + fmtIDR(maxInMonth.value) + ")");
-            $("#minMonth").text(minOutMonth.month !== "" && minOutMonth.value !== Infinity
-                ? minOutMonth.month + " (" + fmtIDR(minOutMonth.value) + ")"
-                : "-");
-        }
+                    html += `
+            <tr class="${rowClass}">
+              <td class="col-no">${i + 1}</td>
+              <td class="col-month">${r.month}</td>
+              <td class="money">${fmtIDR(inVal)}</td>
+              <td class="money">${fmtIDR(outVal)}</td>
+              <td class="money ${netClass}">${fmtIDR(netVal)}</td>
+            </tr>
+          `;
+                });
 
-        function exportCSV() {
-            const year = parseInt($("#yearInput").val());
-            const rows = dataByYear[year] || [];
+                const net = totalIn - totalOut;
+                const netClass = net < 0 ? "net-negative" : "net-positive";
 
-            let totalIn = 0, totalOut = 0;
+                $("#tbodyReport").html(html);
 
-            const lines = [];
-            lines.push(["Bulan", "Pemasukan", "Pengeluaran", "NET"].join(","));
+                // Update footer
+                $("#footerIn").text(fmtIDR(totalIn));
+                $("#footerOut").text(fmtIDR(totalOut));
+                $("#footerNet").html(`<span class="${netClass}">${fmtIDR(net)}</span>`);
 
-            rows.forEach(r => {
-                const inVal = Number(r.in || 0);
-                const outVal = Number(r.out || 0);
-                const netVal = inVal - outVal;
-                totalIn += inVal;
-                totalOut += outVal;
-                lines.push([r.month, inVal, outVal, netVal].join(","));
-            });
+                // Update summary
+                $("#sumIn").text(fmtIDR(totalIn));
+                $("#sumOut").text(fmtIDR(totalOut));
+                $("#sumNet").html(`<span class="${netClass}">${fmtIDR(net)}</span>`);
 
-            const net = totalIn - totalOut;
-            lines.push(["TOTAL", totalIn, totalOut, net].join(","));
+                // Update stats
+                const avgIn = totalIn / 12;
+                const avgOut = totalOut / 12;
+                $("#avgIn").text(fmtIDR(avgIn));
+                $("#avgOut").text(fmtIDR(avgOut));
+                $("#maxMonth").text(maxInMonth.month + " (" + fmtIDR(maxInMonth.value) + ")");
+                $("#minMonth").text(minOutMonth.month !== "" && minOutMonth.value !== Infinity
+                    ? minOutMonth.month + " (" + fmtIDR(minOutMonth.value) + ")"
+                    : "-");
 
-            const csv = lines.join("\n");
-            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-            const url = URL.createObjectURL(blob);
+                // Initialize or refresh DataTable
+                if (dataTable) {
+                    dataTable.destroy();
+                }
 
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `laporan_keuangan_bulanan_${year}.csv`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
+                dataTable = $('#reportTable').DataTable({
+                    dom: '<"row"<"col-sm-6"l><"col-sm-6"f>>Brtip',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            text: '<i class="fa fa-file-excel-o"></i> Excel',
+                            className: 'btn btn-excel btn-sm',
+                            title: 'Laporan Keuangan Bulanan ' + year,
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            text: '<i class="fa fa-file-pdf-o"></i> PDF',
+                            className: 'btn btn-pdf btn-sm',
+                            title: 'Laporan Keuangan Bulanan ' + year,
+                            orientation: 'landscape',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            text: '<i class="fa fa-print"></i> Print',
+                            className: 'btn btn-default btn-sm',
+                            title: 'Laporan Keuangan Bulanan ' + year,
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        }
+                    ],
+                    responsive: true,
+                    pageLength: 12,
+                    lengthMenu: [[12, 25, 50, -1], [12, 25, 50, "Semua"]],
+                    language: {
+                        lengthMenu: "Tampilkan _MENU_ data per halaman",
+                        zeroRecords: "Data tidak ditemukan",
+                        info: "Menampilkan halaman _PAGE_ dari _PAGES_",
+                        infoEmpty: "Tidak ada data tersedia",
+                        infoFiltered: "(difilter dari _MAX_ total data)",
+                        search: "Cari:",
+                        paginate: {
+                            first: "Pertama",
+                            last: "Terakhir",
+                            next: "Selanjutnya",
+                            previous: "Sebelumnya"
+                        }
+                    },
+                    order: [[0, 'asc']],
+                    columnDefs: [
+                        { orderable: false, targets: 0 }
+                    ]
+                });
 
-        function exportPDF() {
-            const year = parseInt($("#yearInput").val());
-            alert("Fitur export PDF dapat diimplementasikan dengan library seperti jsPDF.\nUntuk saat ini, gunakan Print (Ctrl+P) lalu Save as PDF.");
-            window.print();
+                hideLoading();
+            }, 300);
         }
 
         function toggleChart() {
@@ -658,8 +859,6 @@
         // Init
         $(function () {
             $("#btnFilter").on("click", render);
-            $("#btnExcel").on("click", exportCSV);
-            $("#btnPDF").on("click", exportPDF);
             $("#btnToggleChart").on("click", toggleChart);
 
             $("#yearInput").on("keypress", function (e) {
