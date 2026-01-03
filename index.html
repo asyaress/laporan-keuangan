@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Laporan Pemasukan Pengeluaran (Bulanan)</title>
+
+    <!-- Bootstrap 3 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        /* --- Layout profesional --- */
+        body {
+            background: #eeeeee;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            color: #333;
+        }
+
+        .page-wrap {
+            padding: 16px 18px;
+        }
+
+        .page-head {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0;
+            color: #2f2f2f;
+        }
+
+        .breadcrumb-mini {
+            font-size: 12px;
+            color: #7a7a7a;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        .breadcrumb-mini a {
+            color: #4a89dc;
+            text-decoration: none;
+        }
+
+        .breadcrumb-mini a:hover {
+            text-decoration: underline;
+        }
+
+        .panel-like {
+            background: #fff;
+            border: 1px solid #dcdcdc;
+            border-radius: 4px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .filter-row {
+            margin-bottom: 10px;
+        }
+
+        .filter-label {
+            width: 70px;
+            font-weight: 600;
+            color: #444;
+            padding-top: 7px;
+        }
+
+        .input-group .input-group-addon {
+            background: #f7f7f7;
+            border-color: #dcdcdc;
+        }
+
+        .btn-info {
+            background-color: #5bc0de;
+            border-color: #46b8da;
+        }
+
+        .btn-info:hover {
+            background-color: #31b0d5;
+            border-color: #269abc;
+        }
+
+        .btn-excel {
+            background-color: #1dab50;
+            border-color: #169646;
+            color: #fff;
+        }
+
+        .btn-excel:hover {
+            background-color: #148a40;
+            border-color: #0f7836;
+            color: #fff;
+        }
+
+        .btn-pdf {
+            background-color: #d9534f;
+            border-color: #d43f3a;
+            color: #fff;
+        }
+
+        .btn-pdf:hover {
+            background-color: #c9302c;
+            border-color: #ac2925;
+            color: #fff;
+        }
+
+        /* --- Ringkasan --- */
+        .summary-strip {
+            margin: 10px 0 12px;
+            padding: 10px 12px;
+            border: 1px solid #e5e5e5;
+            background: #fafafa;
+            border-radius: 4px;
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .sum-box {
+            min-width: 220px;
+        }
+
+        .sum-label {
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 2px;
+        }
+
+        .sum-value {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: .2px;
+        }
+
+        /* --- Stats Tambahan --- */
+        .stats-strip {
+            margin: 10px 0;
+            padding: 10px 12px;
+            border: 1px solid #e0f2f1;
+            background: #e0f7fa;
+            border-radius: 4px;
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            min-width: 200px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #00695c;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #004d40;
+        }
+
+        /* --- Table --- */
+        table.table-report {
+            margin-top: 6px;
+            background: #fff;
+        }
+
+        table.table-report thead th {
+            background: #f7f7f7;
+            border: 1px solid #e2e2e2 !important;
+            font-weight: 700;
+            color: #333;
+            text-align: center;
+        }
+
+        table.table-report tbody td {
+            border: 1px solid #efefef !important;
+            font-size: 13px;
+        }
+
+        table.table-report tbody tr:nth-child(even) td {
+            background: #fcfcfc;
+        }
+
+        .col-no {
+            width: 46px;
+            text-align: center;
+        }
+
+        .col-month {
+            width: 180px;
+        }
+
+        .money {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .total-row td {
+            background: #f7f7f7 !important;
+            font-weight: 800;
+            border-top: 2px solid #d8d8d8 !important;
+        }
+
+        .net-row td {
+            background: #fffbe6 !important;
+            font-weight: 800;
+            border-top: 1px solid #e8dca9 !important;
+        }
+
+        .net-negative {
+            color: #c9302c;
+        }
+
+        .net-positive {
+            color: #1a7f37;
+        }
+
+        .highlight-max {
+            background: #d4edda !important;
+        }
+
+        .highlight-min {
+            background: #f8d7da !important;
+        }
+
+        /* --- Chart Container --- */
+        .chart-container {
+            margin: 16px 0;
+            padding: 16px;
+            background: #fff;
+            border: 1px solid #dcdcdc;
+            border-radius: 4px;
+            height: 350px;
+        }
+
+        .btn-group-actions {
+            margin-left: 70px;
+        }
+
+        .btn-group-actions .btn {
+            min-width: 84px;
+        }
+
+        @media (max-width: 768px) {
+            .page-head {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .filter-label {
+                width: auto;
+                padding-top: 0;
+            }
+
+            .btn-group-actions {
+                margin-left: 0;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+        }
+
+        .year-selector {
+            display: inline-flex;
+            gap: 8px;
+            margin-left: 10px;
+        }
+
+        .year-selector .btn {
+            min-width: 60px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrap">
+        <!-- Header -->
+        <div class="page-head">
+            <h1 class="page-title">Laporan Pemasukan Pengeluaran (Bulanan)</h1>
+            <p class="breadcrumb-mini">
+                <a href="#">Home</a> &nbsp;&gt;&nbsp; <a href="#">Keuangan</a> &nbsp;&gt;&nbsp; <span>Pemasukan
+                    Pengeluaran</span>
+            </p>
+        </div>
+
+        <div class="panel-like">
+            <!-- Filter -->
+            <div class="filter-row">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-inline">
+                            <label class="filter-label">Tahun</label>
+
+                            <div class="input-group" style="width: 120px;">
+                                <input type="number" class="form-control" id="yearInput" value="2025" min="2020"
+                                    max="2030" />
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            </div>
+
+                            <div class="year-selector">
+                                <button class="btn btn-default btn-sm" onclick="setYear(2024)">2024</button>
+                                <button class="btn btn-default btn-sm" onclick="setYear(2025)">2025</button>
+                                <button class="btn btn-default btn-sm" onclick="setYear(2026)">2026</button>
+                            </div>
+                        </div>
+
+                        <div class="btn-group-actions" style="margin-top: 10px;">
+                            <button id="btnFilter" class="btn btn-info">
+                                <i class="fa fa-search"></i> &nbsp;Tampilkan
+                            </button>
+                            <button id="btnExcel" class="btn btn-excel">
+                                <i class="fa fa-file-excel-o"></i> &nbsp;Excel
+                            </button>
+                            <button id="btnPDF" class="btn btn-pdf">
+                                <i class="fa fa-file-pdf-o"></i> &nbsp;PDF
+                            </button>
+                            <button id="btnToggleChart" class="btn btn-default">
+                                <i class="fa fa-bar-chart"></i> &nbsp;Grafik
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ringkasan Utama -->
+            <div class="summary-strip">
+                <div class="sum-box">
+                    <div class="sum-label">Total Pemasukan (Tahun)</div>
+                    <div id="sumIn" class="sum-value">0</div>
+                </div>
+                <div class="sum-box">
+                    <div class="sum-label">Total Pengeluaran (Tahun)</div>
+                    <div id="sumOut" class="sum-value">0</div>
+                </div>
+                <div class="sum-box">
+                    <div class="sum-label">Total Akhir / NET</div>
+                    <div id="sumNet" class="sum-value">0</div>
+                </div>
+            </div>
+
+            <!-- Stats Tambahan -->
+            <div class="stats-strip">
+                <div class="stat-box">
+                    <div class="stat-label">Rata-rata Pemasukan/Bulan</div>
+                    <div id="avgIn" class="stat-value">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Rata-rata Pengeluaran/Bulan</div>
+                    <div id="avgOut" class="stat-value">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Bulan Tertinggi (Pemasukan)</div>
+                    <div id="maxMonth" class="stat-value">-</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Bulan Terendah (Pengeluaran)</div>
+                    <div id="minMonth" class="stat-value">-</div>
+                </div>
+            </div>
+
+            <!-- Chart (optional, toggle) -->
+            <div id="chartContainer" class="chart-container" style="display:none;">
+                <canvas id="myChart"></canvas>
+            </div>
+
+            <!-- Table -->
+            <div class="table-responsive">
+                <table class="table table-report table-bordered table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="col-no">#</th>
+                            <th class="col-month">Bulan</th>
+                            <th>Pemasukan</th>
+                            <th>Pengeluaran</th>
+                            <th>NET</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyReport"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
+    <script>
+        // ==== Dummy Data (Bulanan) ====
+        const dataByYear = {
+            2024: [
+                { month: "Januari", in: 45000000, out: 12000000 },
+                { month: "Februari", in: 38000000, out: 15000000 },
+                { month: "Maret", in: 42000000, out: 11000000 },
+                { month: "April", in: 0, out: 0 },
+                { month: "Mei", in: 35000000, out: 18000000 },
+                { month: "Juni", in: 40000000, out: 14000000 },
+                { month: "Juli", in: 0, out: 0 },
+                { month: "Agustus", in: 38000000, out: 16000000 },
+                { month: "September", in: 41000000, out: 13000000 },
+                { month: "Oktober", in: 0, out: 0 },
+                { month: "November", in: 44000000, out: 12000000 },
+                { month: "Desember", in: 47000000, out: 19000000 }
+            ],
+            2025: [
+                { month: "Januari", in: 0, out: 0 },
+                { month: "Februari", in: 50366605, out: 781500 },
+                { month: "Maret", in: 16074527, out: 0 },
+                { month: "April", in: 0, out: 0 },
+                { month: "Mei", in: 8750000, out: 2100000 },
+                { month: "Juni", in: 12450000, out: 9450000 },
+                { month: "Juli", in: 0, out: 0 },
+                { month: "Agustus", in: 9100000, out: 12350000 },
+                { month: "September", in: 14200000, out: 7200000 },
+                { month: "Oktober", in: 0, out: 0 },
+                { month: "November", in: 17800000, out: 3500000 },
+                { month: "Desember", in: 21000000, out: 14500000 }
+            ],
+            2026: [
+                { month: "Januari", in: 48000000, out: 13000000 },
+                { month: "Februari", in: 52000000, out: 15000000 },
+                { month: "Maret", in: 45000000, out: 12000000 },
+                { month: "April", in: 0, out: 0 },
+                { month: "Mei", in: 50000000, out: 17000000 },
+                { month: "Juni", in: 46000000, out: 14000000 },
+                { month: "Juli", in: 0, out: 0 },
+                { month: "Agustus", in: 49000000, out: 16000000 },
+                { month: "September", in: 51000000, out: 18000000 },
+                { month: "Oktober", in: 0, out: 0 },
+                { month: "November", in: 53000000, out: 15000000 },
+                { month: "Desember", in: 55000000, out: 20000000 }
+            ]
+        };
+
+        let chartInstance = null;
+
+        function fmtIDR(n) {
+            const num = Number(n || 0);
+            return new Intl.NumberFormat("id-ID", { maximumFractionDigits: 0 }).format(num);
+        }
+
+        function setYear(year) {
+            $("#yearInput").val(year);
+            render();
+        }
+
+        function render() {
+            const year = parseInt($("#yearInput").val());
+
+            if (!dataByYear[year]) {
+                alert("Data untuk tahun " + year + " tidak tersedia.");
+                return;
+            }
+
+            const rows = dataByYear[year];
+            let totalIn = 0, totalOut = 0;
+            let html = "";
+
+            let maxInMonth = { month: "", value: 0 };
+            let minOutMonth = { month: "", value: Infinity };
+
+            rows.forEach((r, i) => {
+                const inVal = Number(r.in || 0);
+                const outVal = Number(r.out || 0);
+                const netVal = inVal - outVal;
+                const netClass = netVal < 0 ? "net-negative" : "net-positive";
+
+                totalIn += inVal;
+                totalOut += outVal;
+
+                // Track max/min
+                if (inVal > maxInMonth.value) {
+                    maxInMonth = { month: r.month, value: inVal };
+                }
+                if (outVal < minOutMonth.value && outVal > 0) {
+                    minOutMonth = { month: r.month, value: outVal };
+                }
+
+                // Highlight rows
+                let rowClass = "";
+                if (inVal === maxInMonth.value && inVal > 0) rowClass = "highlight-max";
+                if (outVal === minOutMonth.value && outVal > 0) rowClass = "highlight-min";
+
+                html += `
+          <tr class="${rowClass}">
+            <td class="col-no">${i + 1}</td>
+            <td class="col-month">${r.month}</td>
+            <td class="money">${fmtIDR(inVal)}</td>
+            <td class="money">${fmtIDR(outVal)}</td>
+            <td class="money ${netClass}">${fmtIDR(netVal)}</td>
+          </tr>
+        `;
+            });
+
+            const net = totalIn - totalOut;
+            const netClass = net < 0 ? "net-negative" : "net-positive";
+
+            // TOTAL row
+            html += `
+        <tr class="total-row">
+          <td colspan="2" class="text-right">TOTAL</td>
+          <td class="money">${fmtIDR(totalIn)}</td>
+          <td class="money">${fmtIDR(totalOut)}</td>
+          <td class="money ${netClass}">${fmtIDR(net)}</td>
+        </tr>
+      `;
+
+            $("#tbodyReport").html(html);
+
+            // Update summary
+            $("#sumIn").text(fmtIDR(totalIn));
+            $("#sumOut").text(fmtIDR(totalOut));
+            $("#sumNet").html(`<span class="${netClass}">${fmtIDR(net)}</span>`);
+
+            // Update stats
+            const avgIn = totalIn / 12;
+            const avgOut = totalOut / 12;
+            $("#avgIn").text(fmtIDR(avgIn));
+            $("#avgOut").text(fmtIDR(avgOut));
+            $("#maxMonth").text(maxInMonth.month + " (" + fmtIDR(maxInMonth.value) + ")");
+            $("#minMonth").text(minOutMonth.month !== "" && minOutMonth.value !== Infinity
+                ? minOutMonth.month + " (" + fmtIDR(minOutMonth.value) + ")"
+                : "-");
+        }
+
+        function exportCSV() {
+            const year = parseInt($("#yearInput").val());
+            const rows = dataByYear[year] || [];
+
+            let totalIn = 0, totalOut = 0;
+
+            const lines = [];
+            lines.push(["Bulan", "Pemasukan", "Pengeluaran", "NET"].join(","));
+
+            rows.forEach(r => {
+                const inVal = Number(r.in || 0);
+                const outVal = Number(r.out || 0);
+                const netVal = inVal - outVal;
+                totalIn += inVal;
+                totalOut += outVal;
+                lines.push([r.month, inVal, outVal, netVal].join(","));
+            });
+
+            const net = totalIn - totalOut;
+            lines.push(["TOTAL", totalIn, totalOut, net].join(","));
+
+            const csv = lines.join("\n");
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `laporan_keuangan_bulanan_${year}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function exportPDF() {
+            const year = parseInt($("#yearInput").val());
+            alert("Fitur export PDF dapat diimplementasikan dengan library seperti jsPDF.\nUntuk saat ini, gunakan Print (Ctrl+P) lalu Save as PDF.");
+            window.print();
+        }
+
+        function toggleChart() {
+            const container = $("#chartContainer");
+            const isVisible = container.is(":visible");
+
+            if (isVisible) {
+                container.slideUp();
+                $("#btnToggleChart").html('<i class="fa fa-bar-chart"></i> &nbsp;Grafik');
+            } else {
+                container.slideDown();
+                $("#btnToggleChart").html('<i class="fa fa-bar-chart"></i> &nbsp;Sembunyikan');
+                renderChart();
+            }
+        }
+
+        function renderChart() {
+            const year = parseInt($("#yearInput").val());
+            const rows = dataByYear[year] || [];
+
+            const labels = rows.map(r => r.month);
+            const dataIn = rows.map(r => Number(r.in || 0));
+            const dataOut = rows.map(r => Number(r.out || 0));
+
+            const ctx = document.getElementById('myChart');
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Pemasukan',
+                            data: dataIn,
+                            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Pengeluaran',
+                            data: dataOut,
+                            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function (value) {
+                                    return 'Rp ' + fmtIDR(value);
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return context.dataset.label + ': Rp ' + fmtIDR(context.parsed.y);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Init
+        $(function () {
+            $("#btnFilter").on("click", render);
+            $("#btnExcel").on("click", exportCSV);
+            $("#btnPDF").on("click", exportPDF);
+            $("#btnToggleChart").on("click", toggleChart);
+
+            $("#yearInput").on("keypress", function (e) {
+                if (e.which === 13) render();
+            });
+
+            render();
+        });
+    </script>
+</body>
+
+</html>
